@@ -1,8 +1,4 @@
-﻿/*
- * CarServer
- */
-
-
+﻿
 var CarServer = {
     clients : {},
     games: {}
@@ -10,8 +6,6 @@ var CarServer = {
 };
 
 var UUID = require('node-uuid');
-var md5 = require('md5');
-var hash_serv_token = md5(server_token);
 
 // Add listener for socket server
 CarServer.attachListeners = function(socket, events) {
@@ -80,10 +74,6 @@ CarServer.onClientConnect = function (socket) {
     CarServer.createOrJoinGame(CarServer.clients[socket.id]);
     //var data = { 'id': socket.id };
     //socket.emit("Connect", data);
-
-    //setTimeout(function () {
-    //        CarServer.clients[socket.id].socket.disconnect();
-    //}, 3000);
 }
 
 // Bắt đầu game
