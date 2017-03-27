@@ -1,0 +1,142 @@
+﻿using SocketIO;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CarShooting : MonoBehaviour {
+
+    SocketIOComponent socket;
+
+    public Rigidbody m_Shell;                   // Prefab of the shell.
+    public Transform m_FireTransform;           // A child of the tank where the shells are spawned.
+    public Slider m_AimSlider;                  // A child of the tank that displays the current launch force.
+    public AudioSource m_ShootingAudio;         // Reference to the audio source used to play the shooting audio. NB: different to the movement audio source.
+    public AudioClip m_ChargingClip;            // Audio that plays when each shot is charging up.
+    public AudioClip m_FireClip;                // Audio that plays when each shot is fired.
+    public float m_MinLaunchForce = 15f;        // The force given to the shell if the fire button is not held.
+    public float m_MaxLaunchForce = 30f;        // The force given to the shell if the fire button is held for the max charge time.
+    public float m_MaxChargeTime = 0.75f;       // How long the shell can charge for before it is fired at max force.
+
+
+    private string m_FireButton;                // The input axis that is used for launching shells.
+    private float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
+    private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
+    private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
+
+
+    private void OnEnable()
+    {
+        // When the tank is turned on, reset the launch force and the UI
+        m_CurrentLaunchForce = m_MinLaunchForce;
+        m_AimSlider.value = m_MinLaunchForce;
+    }
+
+
+    private void Awake()
+    {
+        socket = GameObject.Find("SocketIO").GetComponent<SocketIOComponent>();
+    }
+
+    private void Start ()
+    {
+        // The fire axis is based on the player number.
+        m_FireButton = "Fire1";
+
+        // The rate that the launch force charges up is the range of possible forces by the max charge time.
+        m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
+    }
+
+
+    private void Update ()
+    {
+        // The slider should have a default value of the minimum launch force.
+        m_AimSlider.value = m_MinLaunchForce;
+
+        // If the max force has been exceeded and the shell hasn't yet been launched...
+        if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
+        {
+            // ... use the max force and launch the shell.
+            m_CurrentLaunchForce = m_MaxLaunchForce;
+            Fire();
+        }
+        // Otherwise, if the fire button has just started being pressed...
+        else if (Input.GetButtonDown (m_FireButton))
+        {
+            // ... reset the fired flag and reset the launch force.
+            m_Fired = false;
+            m_CurrentLaunchForce = m_MinLaunchForce;
+
+            // Change the clip to the charging clip and start it playing.
+            m_ShootingAudio.clip = m_ChargingClip;
+            m_ShootingAudio.Play ();
+        }
+        // Otherwise, if the fire button is being held and the shell hasn't been launched yet...
+        else if (Input.GetButton (m_FireButton) && !m_Fired)
+        {
+            // Increment the launch force and update the slider.
+            m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+
+            m_AimSlider.value = m_CurrentLaunchForce;
+        }
+        // Otherwise, if the fire button is released and the shell hasn't been launched yet...
+        else if (Input.GetButtonUp (m_FireButton) && !m_Fired)
+        {
+            // ... launch the shell.
+            Fire();
+        }
+    }
+
+    private void Fire()
+    {
+        // Create an instance of the shell and store a reference to it's rigidbody.
+        Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+        shellInstance.GetComponent<ShellExplosion>().name = "Shell" + this.gameObject.name;
+
+        // Set the fired flag so only Fire is only called once.
+        m_Fired = true;
+
+        // Set the shell's velocity to the launch force in the fire position's forward direction.
+        Vector3 velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+
+        Dictionary<string, JSONObject> data = new Dictionary<string, JSONObject>();
+        
+        Dictionary<string, string> v = new Dictionary<string, string>();
+        v["x"] = Math.Round((Decimal)velocity.x, 4, MidpointRounding.AwayFromZero).ToString();
+        v["y"] = Math.Round((Decimal)velocity.y, 4, MidpointRounding.AwayFromZero).ToString();
+        v["z"] = Math.Round((Decimal)velocity.z, 4, MidpointRounding.AwayFromZero).ToString();
+       
+        data["velocity"] = new JSONObject(v);
+
+        Dictionary<string, string> p = new Dictionary<string, string>();
+        p["x"] = Math.Round((Decimal)m_FireTransform.position.x, 4, MidpointRounding.AwayFromZero).ToString();
+        p["y"] = Math.Round((Decimal)m_FireTransform.position.y, 4, MidpointRounding.AwayFromZero).ToString();
+        p["z"] = Math.Round((Decimal)m_FireTransform.position.z, 4, MidpointRounding.AwayFromZero).ToString();
+
+        data["pos"] = new JSONObject(p);
+
+        Dictionary<string, string> r = new Dictionary<string, string>();
+        r["x"] = Math.Round((Decimal)transform.rotation.x, 4, MidpointRounding.AwayFromZero).ToString();
+        r["y"] = Math.Round((Decimal)transform.rotation.y, 4, MidpointRounding.AwayFromZero).ToString();
+        r["z"] = Math.Round((Decimal)transform.rotation.z, 4, MidpointRounding.AwayFromZero).ToString();
+        r["w"] = Math.Round((Decimal)transform.rotation.w, 4, MidpointRounding.AwayFromZero).ToString();
+
+        data["rot"] = new JSONObject(r);
+
+        socket.Emit("Fire", new JSONObject(data));
+
+        // Set the shell's velocity to the launch force in the fire position's forward direction.
+        shellInstance.velocity = velocity;
+        PlayAudioFire();
+
+        // Reset the launch force.  This is a precaution in case of missing button events.
+        m_CurrentLaunchForce = m_MinLaunchForce;
+    }
+
+    public void PlayAudioFire()
+    {
+        // Change the clip to the firing clip and play it.
+        m_ShootingAudio.clip = m_FireClip;
+        m_ShootingAudio.Play();
+    }
+}

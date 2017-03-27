@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{F2B545A8-ABB1-4F87-06F8-08A79277C061}") = "Cars", "Assembly-CSharp-firstpass.csproj", "{DF498C2E-A90D-5969-5C34-C94D517F4464}"
+EndProject
+Project("{F2B545A8-ABB1-4F87-06F8-08A79277C061}") = "Cars", "Assembly-CSharp.csproj", "{FE45A72E-CEE8-A4A5-B8F3-1A098BAE5CB7}"
+EndProject
+Project("{F2B545A8-ABB1-4F87-06F8-08A79277C061}") = "Cars", "Assembly-CSharp-Editor.csproj", "{27C2657C-F692-DE0F-F85E-E149FBD04E72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DF498C2E-A90D-5969-5C34-C94D517F4464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF498C2E-A90D-5969-5C34-C94D517F4464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF498C2E-A90D-5969-5C34-C94D517F4464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF498C2E-A90D-5969-5C34-C94D517F4464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE45A72E-CEE8-A4A5-B8F3-1A098BAE5CB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE45A72E-CEE8-A4A5-B8F3-1A098BAE5CB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE45A72E-CEE8-A4A5-B8F3-1A098BAE5CB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE45A72E-CEE8-A4A5-B8F3-1A098BAE5CB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27C2657C-F692-DE0F-F85E-E149FBD04E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27C2657C-F692-DE0F-F85E-E149FBD04E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27C2657C-F692-DE0F-F85E-E149FBD04E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27C2657C-F692-DE0F-F85E-E149FBD04E72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

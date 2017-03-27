@@ -1,0 +1,18 @@
+{
+  "name": "Cars3DServer",
+  "version": "0.0.0",
+  "description": "Cars3DServer",
+  "main": "app.js",
+  "author": {
+    "name": "Admin",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "^4.14.1",
+    "express-bearer-token": "^2.1.0",
+    "jsonwebtoken": "^7.3.0",
+    "md5": "^2.2.1",
+    "node-uuid": "^1.4.7",
+    "socket.io": "^1.7.3"
+  }
+}
