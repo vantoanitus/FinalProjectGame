@@ -7,7 +7,7 @@ var CarServer = {
 
 var UUID = require('node-uuid');
 
-// Add listener for socket server
+// Thêm sự kiện
 CarServer.attachListeners = function(socket, events) {
     events.forEach(function (event) {
         socket.on(
@@ -18,13 +18,14 @@ CarServer.attachListeners = function(socket, events) {
     });
 }
 
-// send broadcast đến những client đang chơi cùng nhau
+// Gửi broadcast thong qua gameId
 CarServer.broadcastToGame = function (gameId, msg, arg) {
     CarServer.games[gameId].clients.forEach(function (client) {
         client.socket.emit(msg, arg);
     });
 }
 
+// Gửi broadcast thông qua clientId
 CarServer.broadcastToGameOrPlayer = function (clientId, msg, arg) {
     //if (CarServer.clients[clientId].game !== false) 
     CarServer.broadcastToGame(CarServer.clients[clientId].gameId, msg, arg);
@@ -32,7 +33,7 @@ CarServer.broadcastToGameOrPlayer = function (clientId, msg, arg) {
     //CarServer.clients[clientId].socket.emit(msg, arg);
 }
 
-// OnClientConnect
+
 CarServer.onClientConnect = function (socket) {
     
     console.log('\nIncoming connection from: ' 
@@ -51,15 +52,13 @@ CarServer.onClientConnect = function (socket) {
         score: 0,
         gameId: false,
         socket: socket,
-        loaded: false,
-        auth: false
+        loaded: false
         //...
     }
 
     CarServer.attachListeners(
         socket,
         [
-            'authenticate',
             'StartGame',
             'disconnect',
             'Move',
@@ -72,11 +71,9 @@ CarServer.onClientConnect = function (socket) {
     );
     
     CarServer.createOrJoinGame(CarServer.clients[socket.id]);
-    //var data = { 'id': socket.id };
-    //socket.emit("Connect", data);
 }
 
-// Bắt đầu game
+// data: { 'name', 'car_type' }
 CarServer.onStartGame = function (id, data) {
    
     console.log('\nonStartGame - name: ' + data['name']);
@@ -99,7 +96,7 @@ CarServer.onStartGame = function (id, data) {
     // Thêm 
     CarServer.games[client.gameId].clients.push(client);
 
-    // Start
+    // Khởi tạo
     dataSend['id'] = client.id;
     dataSend['car'] = client.car;
     dataSend['pos'] = client.pos;
@@ -115,8 +112,7 @@ CarServer.onStartGame = function (id, data) {
     });
 } // onStartGame
 
-
-// Emit to other client
+// pos: {'x','y','z'}
 CarServer.onMove = function (id, pos) {
     
     var gameId = CarServer.clients[id].gameId;
@@ -134,7 +130,7 @@ CarServer.onMove = function (id, pos) {
     });
 }
 
-// Emit to other client
+// rot: { 'x', 'y', 'z', 'w' }
 CarServer.onTurn = function (id, rot) {
     
     var gameId = CarServer.clients[id].gameId;
@@ -152,7 +148,7 @@ CarServer.onTurn = function (id, rot) {
     });
 }
 
-// Emit to other client
+// data: { 'velocity', 'pos', 'rot' }
 CarServer.onFire = function (id, data) {
    
     var gameId = CarServer.clients[id].gameId;
@@ -206,7 +202,7 @@ CarServer.onTakeDamage = function (id, data) {
     }
 }
 
-// 
+// data: { 
 CarServer.onDestroyShell = function (id, data) {
     
     var dataSend = {};
@@ -219,7 +215,7 @@ CarServer.onDestroyShell = function (id, data) {
     });
 }
 
-// Mất kết nối
+// 
 CarServer.onDisconnect = function (id) {
     console.log('\n' + id + ' disconnected');
 
@@ -251,8 +247,6 @@ CarServer.onDisconnect = function (id) {
 } // onDisconnect
 
 
-// Function
-
 CarServer.createOrJoinGame = function (client) {
     // Gom nhóm client giới hạn số lượng: n = 10
     // Kiểm tra nhóm trống => ( Có == true )? join : create new game
@@ -263,7 +257,7 @@ CarServer.createOrJoinGame = function (client) {
         CarServer.games[gameId].size++;
 
         console.log('\n' + client.id + ' vua tham gia game id: ' + gameId);
-        console.log("size " + CarServer.games[gameId].size);
+        console.log("So luong nguoi choi: " + CarServer.games[gameId].size);
     } else {
         // Create new game
         game = {
@@ -284,7 +278,7 @@ CarServer.createOrJoinGame = function (client) {
     //CarServer.games[client.gameId].clients.push(client);
 } // createOrJoinGame
 
-// return: gameId
+// Return: gameId
 CarServer.findGameStillEmpty = function () {
     var listEmpty = [];
     
@@ -301,6 +295,7 @@ CarServer.findGameStillEmpty = function () {
 
     return false;
 } // findGameStillEmpty
+
 
 CarServer.loadGame = function (client, gameId) {
    
@@ -344,5 +339,7 @@ CarServer.destroyGame = function (gameId) {
 CarServer.getPosBegin = function () {
     return { 'x' : '0', 'y': '0', 'z' : '0' };
 }
+
+
 
 module.exports = CarServer;
