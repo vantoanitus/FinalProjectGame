@@ -9,22 +9,17 @@ using UnityEngine.UI;
 
 public class NetworkManager : MonoBehaviour {
 
-    private const string TOKEN = "vuong@abc";
-
     [SerializeField]
     private GameObject playerPrefab;
-
     [SerializeField]
     private GameObject otherPlayerPrefab;
-
     [SerializeField]
     private GameObject pausePanel;
-
     [SerializeField]
     private CameraControl cameraCtrl;
-
     [SerializeField]
     private GameObject miniMap;
+    public GameObject[] itemPrefabs;
 
     private SocketIOComponent socket;
     private ectScript myScript;
@@ -40,7 +35,7 @@ public class NetworkManager : MonoBehaviour {
     private void Start()
     {
         // attach events
-        socket.On("connect", OnConnect);
+        //socket.On("connect", OnConnect);
         socket.On("Load", OnLoad);
         socket.On("Start", OnStartGame);
         socket.On("Move", OnMove);
@@ -51,52 +46,13 @@ public class NetworkManager : MonoBehaviour {
         socket.On("DestroyShell", OnDestroyShell);
         socket.On("Death", OnDeath);
         socket.On("UserDisconnect", OnUserDisconnect);
+        socket.On("NewItem", OnNewItem); 
     }
 
-    private string md5(string source)
+    private void OnNewItem(SocketIOEvent e)
     {
-        using (MD5 md5Hash = MD5.Create())
-        {
-            string hash = GetMd5Hash(md5Hash, source);
-            return hash;
-        }
-    }
-
-    private string GetMd5Hash(MD5 md5Hash, string input)
-    {
-        // Convert the input string to a byte array and compute the hash.
-        byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-        // Create a new Stringbuilder to collect the bytes
-        // and create a string.
-        StringBuilder sBuilder = new StringBuilder();
-
-        // Loop through each byte of the hashed data 
-        // and format each one as a hexadecimal string.
-        for (int i = 0; i < data.Length; i++)
-        {
-            sBuilder.Append(data[i].ToString("x2"));
-        }
-
-        // Return the hexadecimal string.
-        return sBuilder.ToString();
-    }
-
-    private void OnConnect(SocketIOEvent e)
-    {
-        // Send Token
-        Dictionary<string, string> dic = new Dictionary<string, string>();
-        dic["token"] = md5(TOKEN);
-
-        try
-        {
-            JSONObject jsonObject = new JSONObject(dic);
-            socket.Emit("authenticate", jsonObject);
-        }
-        catch (Exception ex)
-        {
-            Debug.Log("JsonObjectException: " + "Authenticate");
-        }
+        Debug.Log("OnNewItem");
+        Debug.Log(e.data);
     }
 
     // Load game

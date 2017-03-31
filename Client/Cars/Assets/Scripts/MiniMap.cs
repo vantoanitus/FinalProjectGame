@@ -45,7 +45,7 @@ public class MiniMap : MonoBehaviour
     {
         //So that the pivot point of the icon is at the middle of the image.
         iconHalfSize = iconSize / 2;
-        mapWidth = mapHeight = Screen.height / 4.5f;
+        mapWidth = mapHeight = Screen.height / 5.0f;
         mapHalfSize = mapWidth / 2;
     }
 
@@ -57,7 +57,7 @@ public class MiniMap : MonoBehaviour
     private void OnGUI()
     {
         alphaFadeValue = Mathf.Clamp01(alphaFadeValue + sign * Time.deltaTime / 4);
-        GUI.color = new Color(0, 0, 0, alphaFadeValue);
+        GUI.color = new Color(alphaFadeValue, alphaFadeValue, alphaFadeValue, alphaFadeValue);
         mapOffSetX = Mathf.Clamp(mapOffSetX + sign * (Time.deltaTime * speedHide), -(mapOffSetY + mapWidth), mapOffSetY);
 
         GUI.BeginGroup(new Rect(mapOffSetX, mapOffSetY, mapWidth, mapHeight), miniMap);

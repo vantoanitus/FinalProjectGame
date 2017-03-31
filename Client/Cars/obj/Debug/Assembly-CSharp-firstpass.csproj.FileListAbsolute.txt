@@ -48,3 +48,32 @@ E:\Project\Đề tài\Client\Cars\Temp\bin\Debug\UnityEngine.VR.xml
 E:\Project\Đề tài\Client\Cars\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 E:\Project\Đề tài\Client\Cars\obj\Debug\Assembly-CSharp-firstpass.dll
 E:\Project\Đề tài\Client\Cars\obj\Debug\Assembly-CSharp-firstpass.pdb
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEditor.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.Analytics.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.HoloLens.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.Networking.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.PlaymodeTestsRunner.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.UI.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.VR.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Mono.Cecil.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Unity.SerializationLogic.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Unity.DataContract.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Unity.UNetWeaver.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Unity.CecilTools.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEditor.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.UI.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.Networking.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.PlaymodeTestsRunner.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.Analytics.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.HoloLens.xml
+E:\Github\FinalProjectGame\Client\Cars\Temp\bin\Debug\UnityEngine.VR.xml
+E:\Github\FinalProjectGame\Client\Cars\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
+E:\Github\FinalProjectGame\Client\Cars\obj\Debug\Assembly-CSharp-firstpass.dll
+E:\Github\FinalProjectGame\Client\Cars\obj\Debug\Assembly-CSharp-firstpass.pdb

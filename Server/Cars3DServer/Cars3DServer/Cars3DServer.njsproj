@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="server\car_server.js" />
+    <Compile Include="server\game_core.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>
