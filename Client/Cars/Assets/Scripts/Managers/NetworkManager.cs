@@ -43,7 +43,7 @@ public class NetworkManager : MonoBehaviour {
         socket.On("Fire", OnFire);
         socket.On("UserConnect", OnUserConnect);
         socket.On("TakeDamage", OnTakeDamage);
-        socket.On("DestroyShell", OnDestroyShell);
+        //socket.On("DestroyShell", OnDestroyShell);
         socket.On("Death", OnDeath);
         socket.On("UserDisconnect", OnUserDisconnect);
         socket.On("NewItem", OnNewItem); 
@@ -53,6 +53,8 @@ public class NetworkManager : MonoBehaviour {
     {
         Debug.Log("OnNewItem");
         Debug.Log(e.data);
+        Vector3 pos = myScript.JsonToVector3(e.data.GetField("pos"));
+        Instantiate(itemPrefabs[0], pos, Quaternion.identity, null);
     }
 
     // Load game
@@ -180,18 +182,18 @@ public class NetworkManager : MonoBehaviour {
         }
     }
 
-    private void OnDestroyShell(SocketIOEvent e) {
-        Debug.Log("OnDestroyShell");
+    //private void OnDestroyShell(SocketIOEvent e) {
+    //    Debug.Log("OnDestroyShell");
 
-        string id = myScript.JsonToString(e.data.GetField("id").ToString(), "\"");
+    //    string id = myScript.JsonToString(e.data.GetField("id").ToString(), "\"");
 
-        //GameObject shell = GameObject.Find("Shell" + id);
-        //if (null != shell)
-        //{
-        //    Debug.Log("shell.GetComponent<OtherPlayerShell>().Play()");
-        //    shell.GetComponent<OtherPlayerShell>().Play();
-        //}
-    }
+    //    //GameObject shell = GameObject.Find("Shell" + id);
+    //    //if (null != shell)
+    //    //{
+    //    //    Debug.Log("shell.GetComponent<OtherPlayerShell>().Play()");
+    //    //    shell.GetComponent<OtherPlayerShell>().Play();
+    //    //}
+    //}
 
     private void OnDeath(SocketIOEvent e)
     {

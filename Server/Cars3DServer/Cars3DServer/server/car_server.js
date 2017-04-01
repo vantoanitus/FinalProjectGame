@@ -6,6 +6,11 @@ var CarServer = {
     games: {},
 };
 
+var Status = {
+    WAITING: 0,  
+    PLAYING: 1
+};
+
 // Gửi broadcast thong qua gameId
 CarServer.broadcastToGame = function (gameId, msg, arg) {
     CarServer.games[gameId].clients.forEach(function (client) {
@@ -51,6 +56,7 @@ CarServer.onClientConnect = function (socket) {
         score: 0,
         gameId: false,
         socket: socket,
+        status: Status.WAITING,
         loaded: false
         //...
     }
@@ -63,7 +69,7 @@ CarServer.onClientConnect = function (socket) {
             'Turn',
             'Fire',
             'TakeDamage',
-            'DestroyShell',
+            //'DestroyShell',
             //...
             'disconnect'
         ]
@@ -76,25 +82,23 @@ CarServer.onClientConnect = function (socket) {
 CarServer.onStartGame = function (id, data) {
     
     var client = CarServer.clients[id];
-    var dataSend = {};
-    
-    // Load game
-    if (!client.loaded)
-        CarServer.loadGame(client, client.gameId);
-    
-    client.loaded = true;
     client.health = 100;
     client.name = data['name'];
     client.car = data['car'];
     client.bullet = '1';
-    //client.pos = CarServer.getPosBegin(client.gameId);
-    client.pos = GetRandomPos(client.gameId);;
+    client.pos = GetRandomPos(client.gameId);
     client.rot = { 'x' : '0', 'y' : '0', 'z' : '0', 'w' : '0' };
+    client.status = Status.PLAYING;
     
-    // Thêm 
-    CarServer.games[client.gameId].clients.push(client);
+    // Load game
+    if (!client.loaded) {
+        CarServer.loadGame(client, client.gameId);
+        client.loaded = true;
+        CarServer.games[client.gameId].clients.push(client);
+    }
     
     // Khởi tạo
+    var dataSend = {};
     dataSend['id'] = client.id;
     dataSend['car'] = client.car;
     dataSend['pos'] = client.pos;
@@ -176,17 +180,16 @@ CarServer.onTakeDamage = function (id, data) {
     if (client.health <= 0) {
         dataSend['id'] = clientId;
         CarServer.broadcastToGameOrPlayer(id, 'Death', dataSend);
-        
-        var gameId = CarServer.clients[clientId].gameId;
-        if (gameId !== false) {
-            var game = CarServer.games[gameId];
-            
-            var index = game.clients.indexOf(client);
-            console.log(index);
-            if (index != -1) {
-                game.clients.splice(index, 1);
-            }
-        }
+        client.status = Status.WAITING;
+        //var gameId = CarServer.clients[clientId].gameId;
+        //if (gameId !== false) {
+        //    //var game = CarServer.games[gameId];
+        //    //var index = game.clients.indexOf(client);
+        //    //console.log(index);
+        //    //if (index != -1) {
+        //    //    game.clients.splice(index, 1);
+        //    //}
+        //}
     }
     else {
         dataSend['id'] = clientId;
@@ -194,17 +197,17 @@ CarServer.onTakeDamage = function (id, data) {
         CarServer.broadcastToGameOrPlayer(id, 'TakeDamage', dataSend);
     }
 };
-CarServer.onDestroyShell = function (id, data) {
+//CarServer.onDestroyShell = function (id, data) {
     
-    var dataSend = {};
-    dataSend['id'] = id;
+//    var dataSend = {};
+//    dataSend['id'] = id;
     
-    var gameId = CarServer.clients[id].gameId;
-    CarServer.games[gameId].clients.forEach(function (client) {
-        if (client.id != id)
-            client.socket.emit('DestroyShell', dataSend);
-    });
-};
+//    var gameId = CarServer.clients[id].gameId;
+//    CarServer.games[gameId].clients.forEach(function (client) {
+//        if (client.id != id)
+//            client.socket.emit('DestroyShell', dataSend);
+//    });
+//};
 CarServer.onDisconnect = function (id) {
     
     console.log('\n' + id + ' disconnected');
@@ -374,7 +377,7 @@ CarServer.getPosBegin = function (gameId) {
 InitGame = function (gameId) {
     
     var Maps = [];
-    for (i = 0; i < 324; i++) {
+    for (i = 0; i < 306; i++) {
         Maps.push(true);
     }
     
@@ -399,11 +402,6 @@ InitGame = function (gameId) {
     Maps[297] = false;
     Maps[294] = false;
     Maps[292] = false;
-    Maps[310] = false;
-    Maps[314] = false;
-    Maps[315] = false;
-    Maps[318] = false;
-    Maps[319] = false;
 
     // Create new game
     var game = {
@@ -442,9 +440,9 @@ GetRandomPos = function (gameId) {
     
     var index = Math.floor(Math.random() * arr.length);
     var pos = {
-        'x': ( - (Math.floor(arr[index] / 18) * 5) + 42) + '',
-        'y': '0',
-        'z': ((arr[index] % 18) * 5 - 42) + '',
+        'x': ( - (Math.floor(arr[index] / 18) * 5) + 40 + Math.random() * 4) + '',
+        'y': '1',
+        'z': ((arr[index] % 18) * 5 - (40 + Math.random() * 4)) + '',
     };
     return pos;
 };
@@ -454,13 +452,13 @@ GetMapsIndexFromPos = function (pos) {
     var z = parseInt(pos.z) + 42;
     var index = Math.floor(x / 5) + Math.floor(z / 5) * 18;
 
-    return Math.abs(index % 324);
+    return Math.abs(index % 306);
 };
 
 CreateItem = function (gameId) {
     var pos = GetRandomPos(gameId);
     // 4 là số loại item
-    var itemType = Math.floor(Math.random() * 4 - 1);
+    var itemType = Math.random() * 4;
 
     var data = { pos: pos, item_type: itemType };
     CarServer.broadcastToGame(gameId, 'NewItem', data);
